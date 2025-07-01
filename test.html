@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Recipe</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #dfe4ea;
+      margin: 0;
+    }
+    .navbar {
+      background: #2f3542;
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .container {
+      max-width: 500px;
+      margin: 3rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.7rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      font-size: 1rem;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .add-btn {
+      background: #2ed573;
+      margin-left: 1rem;
+    }
+    .submit-btn {
+      background: #1e90ff;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    li {
+      background: #f1f2f6;
+      padding: 0.5rem;
+      border-radius: 4px;
+      margin: 0.3rem 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div>Recipe Sharing App</div>
+    <div>
+      <a href="recipes.html" style="color:white; margin-right: 1rem;">Recipes</a>
+      <a href="add-recipe.html" style="color:white; margin-right: 1rem;">Add Recipe</a>
+      <a href="favourites.html" style="color:white;">Favourites</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Add Recipe</h2>
+    <form id="recipeForm">
+      <div class="form-group">
+        <label>Title:</label>
+        <input type="text" id="title" required />
+      </div>
+      <div class="form-group">
+        <label>Ingredients:</label>
+        <div style="display: flex;">
+          <input type="text" id="ingredientInput" placeholder="Add ingredient..." />
+          <button type="button" class="add-btn" onclick="addIngredient()">Add Ingredient</button>
+        </div>
+        <ul id="ingredientList"></ul>
+      </div>
+      <div class="form-group">
+        <label>Instructions:</label>
+        <textarea id="instructions" rows="5" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Image URL:</label>
+        <input type="url" id="imageUrl" />
+      </div>
+      <button type="submit" class="submit-btn">Add Recipe</button>
+    </form>
+    <div id="message" style="margin-top: 1rem;"></div>
+  </div>
+
+  <script>
+    const ingredients = [];
+
+    function addIngredient() {
+      const input = document.getElementById('ingredientInput');
+      const value = input.value.trim();
+      if (value) {
+        ingredients.push(value);
+        const li = document.createElement('li');
+        li.textContent = value;
+        document.getElementById('ingredientList').appendChild(li);
+        input.value = '';
+      }
+    }
+
+    document.getElementById('recipeForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const title = document.getElementById('title').value;
+      const instructions = document.getElementById('instructions').value;
+      const imageUrl = document.getElementById('imageUrl').value;
+
+      const body = {
+        title,
+        ingredients,
+        instructions,
+        image: imageUrl
+      };
+
+      try {
+        const res = await fetch('http://localhost:5000/api/recipes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        const data = await res.json();
+        document.getElementById('message').textContent = '✅ Recipe added successfully!';
+      } catch (err) {
+        console.error('Error adding recipe:', err);
+        document.getElementById('message').textContent = '❌ Error adding recipe.';
+      }
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nature Inspired Webpage</title>
+  
+  <style>
+    * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    background-color: #f5f2e7; /* beige background */
+    color: #2f4f4f;
+  }
+  
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #FF6B6B ; /* green */
+    padding: 15px 40px;
+    border-bottom: 5px solid black; /* blue border */
+  }
+  
+  .nav-left a {
+    margin-right: 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .nav-left a:hover {
+    text-decoration: underline;
+  }
+  
+  .logo img {
+    height: 40px;
+  }
+  
+  main {
+    display: flex;
+    padding: 60px 40px;
+    align-items: center;
+    gap: 50px;
+  }
+  
+  .slideshow-container {
+    flex: 1;
+    max-width: 600px;
+  }
+  
+  .slideshow-container img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .description {
+    flex: 1;
+    max-width: 500px;
+  }
+  
+  .description h1 {
+    color: #2f4f4f;
+    margin-bottom: 20px;
+  }
+  
+  .description p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  .auth-buttons {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .auth-buttons button {
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 16px;
+    border: none;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 300px;
+    margin-left: 10px;
+    align-items: center;
+  
+  }
+  
+  .auth-buttons button:hover {
+    background-color: #45a049;
+  }
+  
+  
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-bar">
+      <div class="nav-left">
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="logo">
+        <img src="recipelogo.png" alt="Logo" style="width: 180px; height: auto;" />
+
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="slideshow-container">
+      <img id="slideshow" src="images/spaghetti.jpg" alt="Slideshow image" />
+    </div>
+
+    <div class="description">
+      <h1>Welcome to Tasty Tales</h1>
+      <p>" A place for messy cooks and magical meals! "</p>
+    </div>
+    <div class="auth-buttons">
+      <button onclick="window.location.href='login.html'">Login</button>
+      <button onclick="window.location.href='register.html'">Sign Up</button>
+    </div>
+
+  </main>
+
+  <script src="script1.js"></script>
+</body>
+</html>

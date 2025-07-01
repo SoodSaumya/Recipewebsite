@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recipe App Register</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #38b6ff, #3cd070);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .login-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+    button {
+      width: 100%;
+      padding: 0.8rem;
+      background: #38b6ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #2a9bd8;
+    }
+    button:disabled {
+      background: #cccccc;
+      cursor: not-allowed;
+    }
+    #message {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 500;
+      min-height: 20px;
+    }
+    .error {
+      color: #e74c3c;
+    }
+    .success {
+      color: #2ecc71;
+    }
+    .switch-form {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .switch-form a {
+      color: #38b6ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .switch-form a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h1>Recipe App</h1>
+    <form id="registerForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Your name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Your email" required />
+      </div>
+      <button type="submit" id="submitBtn">Register</button>
+      <div id="message"></div>
+      <div class="switch-form">
+        Already have an account? <a href="login.html">Login here</a>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const messageEl = document.getElementById('message');
+      const submitBtn = document.getElementById('submitBtn');
+
+      // Clear previous messages and disable button
+      messageEl.textContent = '';
+      messageEl.className = '';
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Registering...';
+
+      try {
+        const response = await fetch('http://localhost:5000/api/register', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ name, email })
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+          throw new Error(data.error || 'Registration failed');
+        }
+
+        // Store user data and token
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+
+        // Show success message
+        messageEl.textContent = data.message || 'Registration successful!';
+        messageEl.className = 'success';
+
+        // Redirect to home page after 1 second
+       /* setTimeout(() => {
+          window.location.href = 'home.html';
+        }, 1000);*/
+
+      } catch (err) {
+        console.error('Registration error:', err);
+        messageEl.textContent = err.message || 'An error occurred during registration.';
+        messageEl.className = 'error';
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register';
+      }
+    });
+  </script>
+</body>
+</html>

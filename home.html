@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receipes - Share Your Favorite Receipes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #FF6B6B;
+            --secondary-color: #4ECDC4;
+            --dark-color: #292F36;
+            --light-color: #F7FFF7;
+            --accent-color: #FFE66D;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+        }
+        
+        .navbar {
+            background-color: var(--primary-color);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white;
+            font-size: 1.8rem;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        
+        .recipe-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+            border: none;
+        }
+        
+        .recipe-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-img-top {
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-title {
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .card-text {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .badge-category {
+            background-color: var(--secondary-color);
+            color: white;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 80px 0;
+            margin-bottom: 50px;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .hero-title {
+            font-weight: 800;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero-subtitle {
+            font-weight: 300;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background-color: var(--secondary-color);
+            bottom: -10px;
+            left: 0;
+            border-radius: 2px;
+        }
+        
+        .add-recipe-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .add-recipe-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Modal styles */
+        .modal-content {
+            border-radius: 15px;
+            border: none;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+        
+        .close {
+            color: white;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 205, 196, 0.25);
+        }
+        
+        .ingredient-input, .instruction-input {
+            margin-bottom: 10px;
+        }
+        
+        .add-ingredient-btn, .add-instruction-btn {
+            background-color: var(--secondary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 5px 15px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Receipes</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
+                            <i class="fas fa-plus-circle me-1"></i> Add Recipe
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-heart me-1"></i> Favorites</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container text-center">
+            <h1 class="hero-title">Share Your Culinary Creations</h1>
+            <p class="hero-subtitle">Discover, create, and share delicious recipes with the Recipps community</p>
+            <form class="d-flex justify-content-center">
+                <div class="input-group mb-3" style="max-width: 600px;">
+                    <input type="text" class="form-control" placeholder="Search for recipes..." aria-label="Search recipes">
+                    <button class="btn btn-light" type="submit"><i class="fas fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Recipe Cards Section -->
+    <section class="container my-5">
+        <h2 class="section-title">Featured Recipes</h2>
+        <div class="row">
+            <!-- Recipe Card 1 - Spaghetti Carbonara -->
+            <div class="col-md-4">
+                <div class="card recipe-card">
+                    <img src="https://images.unsplash.com/photo-1588013273468-315fd88ea34c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Spaghetti Carbonara">
+                    <div class="card-body">
+                        <h5 class="card-title">Spaghetti Carbonara</h5>
+                        <div class="mb-3">
+                            <span class="badge badge-category">Italian</span>
+                            <span class="badge badge-category">Pasta</span>
+                            <span class="badge badge-category">Dinner</span>
+                        </div>
+                        <p class="card-text">A classic Roman pasta dish made with eggs, cheese, pancetta, and pepper.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 25 mins</small>
+                            <button class="btn btn-primary btn-sm view-recipe" data-id="1">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe Card 2 - Margherita Pizza -->
+            <div class="col-md-4">
+                <div class="card recipe-card">
+                    <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Margherita Pizza">
+                    <div class="card-body">
+                        <h5 class="card-title">Margherita Pizza</h5>
+                        <div class="mb-3">
+                            <span class="badge badge-category">Italian</span>
+                            <span class="badge badge-category">Vegetarian</span>
+                            <span class="badge badge-category">Dinner</span>
+                        </div>
+                        <p class="card-text">Simple yet delicious pizza with tomato sauce, fresh mozzarella, and basil.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 45 mins</small>
+                            <button class="btn btn-primary btn-sm view-recipe" data-id="2">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe Card 3 - Ragi Porridge -->
+            <div class="col-md-4">
+                <div class="card recipe-card">
+                    <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Ragi Porridge">
+                    <div class="card-body">
+                        <h5 class="card-title">Ragi Porridge</h5>
+                        <div class="mb-3">
+                            <span class="badge badge-category">Indian</span>
+                            <span class="badge badge-category">Breakfast</span>
+                            <span class="badge badge-category">Healthy</span>
+                        </div>
+                        <p class="card-text">Nutritious finger millet porridge sweetened with jaggery or dates.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 20 mins</small>
+                            <button class="btn btn-primary btn-sm view-recipe" data-id="3">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <h2 class="section-title mt-5">Recent Recipes</h2>
+        <div class="row">
+            <!-- Recipe Card 4 - Chicken Curry -->
+            <div class="col-md-4">
+                <div class="card recipe-card">
+                    <img src="https://images.unsplash.com/photo-1601050690117-64b6d8a194e9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Chicken Curry">
+                    <div class="card-body">
+                        <h5 class="card-title">Chicken Curry</h5>
+                        <div class="mb-3">
+                            <span class="badge badge-category">Indian</span>
+                            <span class="badge badge-category">Non-Veg</span>
+                            <span class="badge badge-category">Dinner</span>
+                        </div>
+                        <p class="card-text">Aromatic and flavorful chicken curry with rich gravy and spices.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 50 mins</small>
+                            <button class="btn btn-primary btn-sm view-recipe" data-id="4">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe Card 5 - Chocolate Cake -->
+            <div class="col-md-4">
+                <div class="card recipe-card">
+                    <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Chocolate Cake">
+                    <div class="card-body">
+                        <h5 class="card-title">Chocolate Cake</h5>
+                        <div class="mb-3">
+                            <span class="badge badge-category">Dessert</span>
+                            <span class="badge badge-category">Baking</span>
+                            <span class="badge badge-category">Vegetarian</span>
+                        </div>
+                        <p class="card-text">Rich and moist chocolate cake with chocolate frosting.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 1 hr 15 mins</small>
+                            <button class="btn btn-primary btn-sm view-recipe" data-id="5">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recipe Card 6 - Greek Salad -->
+            <div class="col-md-4">
+                <div class="card recipe-card">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" class="card-img-top" alt="Greek Salad">
+                    <div class="card-body">
+                        <h5 class="card-title">Greek Salad</h5>
+                        <div class="mb-3">
+                            <span class="badge badge-category">Salad</span>
+                            <span class="badge badge-category">Vegetarian</span>
+                            <span class="badge badge-category">Healthy</span>
+                        </div>
+                        <p class="card-text">Fresh and crisp salad with feta cheese, olives, and Mediterranean flavors.</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted"><i class="fas fa-clock me-1"></i> 15 mins</small>
+                            <button class="btn btn-primary btn-sm view-recipe" data-id="6">View Recipe</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+     
+      <button onclick="window.location.href='test.html'" style="display:block; margin:40px auto; background-color:#ff5e57; color:white; border:none; border-radius:20px; padding:10px 20px; font-weight:bold; cursor:pointer;">Add New Recipe</button>
+
+    <!-- Add Recipe Button -->
+    <div class="add-recipe-btn" data-bs-toggle="modal" data-bs-target="#addRecipeModal">
+        <i class="fas fa-plus"></i>
+    </div>
+
+    <!-- Add Recipe Modal -->
+    <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRecipeModalLabel">Add New Recipe</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="recipeForm">
+                        <div class="mb-3">
+                            <label for="recipeName" class="form-label">Recipe Name</label>
+                            <input type="text" class="form-control" id="recipeName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeImage" class="form-label">Image URL</label>
+                            <input type="url" class="form-control" id="recipeImage" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeDescription" class="form-label">Description</label>
+                            <textarea class="form-control" id="recipeDescription" rows="2" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="recipeTime" class="form-label">Preparation Time (minutes)</label>
+                            <input type="number" class="form-control" id="recipeTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Categories</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="categoryBreakfast" value="Breakfast">
+                                    <label class="form-check-label" for="categoryBreakfast">Breakfast</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="categoryLunch" value="Lunch">
+                                    <label class="form-check-label" for="categoryLunch">Lunch</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="categoryDinner" value="Dinner">
+                                    <label class="form-check-label" for="categoryDinner">Dinner</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="categoryDessert" value="Dessert">
+                                    <label class="form-check-label" for="categoryDessert">Dessert</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="categoryVegetarian" value="Vegetarian">
+                                    <label class="form-check-label" for="categoryVegetarian">Vegetarian</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="categoryVegan" value="Vegan">
+                                    <label class="form-check-label" for="categoryVegan">Vegan</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ingredients</label>
+                            <div id="ingredientsContainer">
+                                <div class="input-group ingredient-input">
+                                    <input type="text" class="form-control ingredient" placeholder="Ingredient" required>
+                                    <button type="button" class="btn btn-danger remove-ingredient"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn add-ingredient-btn mt-2" id="addIngredient"><i class="fas fa-plus me-1"></i> Add Ingredient</button>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Instructions</label>
+                            <div id="instructionsContainer">
+                                <div class="input-group instruction-input">
+                                    <textarea class="form-control instruction" placeholder="Instruction" rows="2" required></textarea>
+                                    <button type="button" class="btn btn-danger remove-instruction"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <button type="button" class="btn add-instruction-btn mt-2" id="addInstruction"><i class="fas fa-plus me-1"></i> Add Instruction</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveRecipe">Save Recipe</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Recipe Modal -->
+    <div class="modal fade" id="viewRecipeModal" tabindex="-1" aria-labelledby="viewRecipeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewRecipeModalLabel">Recipe Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="recipeDetails">
+                    <!-- Recipe details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-primary"><i class="far fa-heart me-1"></i> Add to Favorites</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>About Recipps</h5>
+                    <p>A community-driven platform for sharing and discovering delicious recipes from around the world.</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Home</a></li>
+                        <li><a href="#" class="text-white" data-bs-toggle="modal" data-bs-target="#addRecipeModal">Add Recipe</a></li>
+                        <li><a href="#" class="text-white">Favorites</a></li>
+                        <li><a href="#" class="text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Connect With Us</h5>
+                    <a href="#" class="text-white me-3"><i class="fab fa-facebook-f fa-lg"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#" class="text-white"><i class="fab fa-pinterest fa-lg"></i></a>
+                </div>
+            </div>
+            <hr class="my-4 bg-light">
+            <p class="mb-0">&copy; 2023 Recipps. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sample recipe data
+            const recipes = {
+                1: {
+                    name: "Spaghetti Carbonara",
+                    image: "https://images.unsplash.com/photo-1588013273468-315fd88ea34c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    description: "A classic Roman pasta dish made with eggs, cheese, pancetta, and pepper.",
+                    time: 25,
+                    categories: ["Italian", "Pasta", "Dinner"],
+                    ingredients: [
+                        "200g spaghetti",
+                        "100g pancetta or guanciale, diced",
+                        "2 large eggs",
+                        "50g grated Pecorino Romano cheese",
+                        "50g grated Parmesan cheese",
+                        "2 cloves garlic, minced",
+                        "Freshly ground black pepper",
+                        "Salt to taste",
+                        "Fresh parsley, chopped (for garnish)"
+                    ],
+                    instructions: [
+                        "Cook the spaghetti in a large pot of salted boiling water until al dente.",
+                        "While the pasta cooks, heat a large skillet over medium heat. Add the pancetta and cook until crispy.",
+                        "In a bowl, whisk together the eggs, grated cheeses, and plenty of black pepper.",
+                        "Drain the pasta, reserving about 1/2 cup of the cooking water.",
+                        "Working quickly, add the hot pasta to the skillet with the pancetta. Remove from heat.",
+                        "Pour the egg mixture over the pasta, stirring constantly. Add reserved pasta water as needed to create a creamy sauce.",
+                        "Season with salt if needed and serve immediately with extra cheese and parsley."
+                    ]
+                },
+                2: {
+                    name: "Margherita Pizza",
+                    image: "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    description: "Simple yet delicious pizza with tomato sauce, fresh mozzarella, and basil.",
+                    time: 45,
+                    categories: ["Italian", "Vegetarian", "Dinner"],
+                    ingredients: [
+                        "Pizza dough (store-bought or homemade)",
+                        "1/2 cup tomato sauce",
+                        "1 1/2 cups shredded mozzarella cheese",
+                        "2 ripe tomatoes, sliced",
+                        "Fresh basil leaves",
+                        "Olive oil",
+                        "Salt and pepper to taste"
+                    ],
+                    instructions: [
+                        "Preheat your oven to the highest temperature (usually 475-500°F/245-260°C).",
+                        "Roll out the pizza dough on a floured surface to your desired thickness.",
+                        "Transfer the dough to a pizza stone or baking sheet.",
+                        "Spread tomato sauce evenly over the dough, leaving a small border for the crust.",
+                        "Arrange the sliced tomatoes and distribute the mozzarella cheese evenly.",
+                        "Drizzle with a little olive oil and season with salt and pepper.",
+                        "Bake for 10-15 minutes until the crust is golden and the cheese is bubbly.",
+                        "Remove from oven and top with fresh basil leaves before serving."
+                    ]
+                },
+                3: {
+                    name: "Ragi Porridge",
+                    image: "https://images.unsplash.com/photo-1601050690597-df0568f70950?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+                    description: "Nutritious finger millet porridge sweetened with jaggery or dates.",
+                    time: 20,
+                    categories: ["Indian", "Breakfast", "Healthy"],
+                    ingredients: [
+                        "4 tablespoon ragi flour (¼ cup) finger millet flour",
+                        "1½ tablespoon sugar or jaggery or dates",
+                        "1½ cups Water",
+                        "1 cup Milk",
+                        "4 drops ghee",
+                        "⅛ teaspoon cardamom powder",
+                        "Almonds or cashews for garnish"
+                    ],
+                    instructions: [
+                        "Add ragi flour to a bowl and mix with ⅛ cup water to make a smooth paste.",
+                        "Bring the remaining water to a rolling boil in a saucepan.",
+                        "Reduce heat to low and slowly pour the ragi mixture into the boiling water, stirring constantly to prevent lumps.",
+                        "Keep stirring and cook for 5-7 minutes until the mixture thickens.",
+                        "Add milk and sweetener (sugar/jaggery/dates) and continue cooking for another 5 minutes.",
+                        "Add cardamom powder and ghee, mix well.",
+                        "Garnish with chopped nuts and serve warm."
+                    ]
+                }
+            };
+
+            // Add ingredient field
+            document.getElementById('addIngredient').addEventListener('click', function() {
+                const container = document.getElementById('ingredientsContainer');
+                const div = document.createElement('div');
+                div.className = 'input-group ingredient-input mt-2';
+                div.innerHTML = `
+                    <input type="text" class="form-control ingredient" placeholder="Ingredient" required>
+                    <button type="button" class="btn btn-danger remove-ingredient"><i class="fas fa-times"></i></button>
+                `;
+                container.appendChild(div);
+            });
+
+            // Add instruction field
+            document.getElementById('addInstruction').addEventListener('click', function() {
+                const container = document.getElementById('instructionsContainer');
+                const div = document.createElement('div');
+                div.className = 'input-group instruction-input mt-2';
+                div.innerHTML = `
+                    <textarea class="form-control instruction" placeholder="Instruction" rows="2" required></textarea>
+                    <button type="button" class="btn btn-danger remove-instruction"><i class="fas fa-times"></i></button>
+                `;
+                container.appendChild(div);
+            });
+
+            // Remove ingredient/instruction field
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('remove-ingredient') || 
+                    e.target.parentElement.classList.contains('remove-ingredient')) {
+                    const btn = e.target.classList.contains('remove-ingredient') ? e.target : e.target.parentElement;
+                    btn.closest('.ingredient-input').remove();
+                }
+                if (e.target.classList.contains('remove-instruction') || 
+                    e.target.parentElement.classList.contains('remove-instruction')) {
+                    const btn = e.target.classList.contains('remove-instruction') ? e.target : e.target.parentElement;
+                    btn.closest('.instruction-input').remove();
+                }
+            });
+
+            // View recipe details
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('view-recipe') || 
+                    e.target.parentElement.classList.contains('view-recipe')) {
+                    const btn = e.target.classList.contains('view-recipe') ? e.target : e.target.parentElement;
+                    const recipeId = btn.getAttribute('data-id');
+                    const recipe = recipes[recipeId];
+                    
+                    if (recipe) {
+                        let categoriesHtml = '';
+                        recipe.categories.forEach(category => {
+                            categoriesHtml += `<span class="badge badge-category me-1">${category}</span>`;
+                        });
+                        
+                        let ingredientsHtml = '<ul>';
+                        recipe.ingredients.forEach(ingredient => {
+                            ingredientsHtml += `<li>${ingredient}</li>`;
+                        });
+                        ingredientsHtml += '</ul>';
+                        
+                        let instructionsHtml = '<ol>';
+                        recipe.instructions.forEach(instruction => {
+                            instructionsHtml += `<li>${instruction}</li>`;
+                        });
+                        instructionsHtml += '</ol>';
+                        
+                        const modalContent = `
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <img src="${recipe.image}" class="img-fluid rounded mb-3" alt="${recipe.name}">
+                                    <h4>${recipe.name}</h4>
+                                    <p>${recipe.description}</p>
+                                    <p><i class="fas fa-clock me-1"></i> ${recipe.time} minutes</p>
+                                    <div class="mb-3">${categoriesHtml}</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Ingredients</h5>
+                                    ${ingredientsHtml}
+                                    <h5 class="mt-4">Instructions</h5>
+                                    ${instructionsHtml}
+                                </div>
+                            </div>
+                        `;
+                        
+                        document.getElementById('recipeDetails').innerHTML = modalContent;
+                        const modal = new bootstrap.Modal(document.getElementById('viewRecipeModal'));
+                        modal.show();
+                    }
+                }
+            });
+
+            // Save recipe to database
+            document.getElementById('saveRecipe').addEventListener('click', function() {
+                const recipeName = document.getElementById('recipeName').value;
+                const recipeImage = document.getElementById('recipeImage').value;
+                const recipeDescription = document.getElementById('recipeDescription').value;
+                const recipeTime = document.getElementById('recipeTime').value;
+                
+                // Get selected categories
+                const categories = [];
+                document.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                    categories.push(checkbox.value);
+                });
+                
+                // Get ingredients
+                const ingredients = [];
+                document.querySelectorAll('.ingredient').forEach(input => {
+                    if (input.value.trim() !== '') {
+                        ingredients.push(input.value.trim());
+                    }
+                });
+                
+                // Get instructions
+                const instructions = [];
+                document.querySelectorAll('.instruction').forEach(textarea => {
+                    if (textarea.value.trim() !== '') {
+                        instructions.push(textarea.value.trim());
+                    }
+                });
+                
+                // Validate form
+                if (!recipeName || !recipeImage || !recipeDescription || !recipeTime || ingredients.length === 0 || instructions.length === 0) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Create recipe object
+                const newRecipe = {
+                    name: recipeName,
+                    image: recipeImage,
+                    description: recipeDescription,
+                    time: recipeTime,
+                    categories: categories,
+                    ingredients: ingredients,
+                    instructions: instructions
+                };
+                
+                // In a real app, you would send this to your backend to save to MongoDB
+                console.log('Recipe to save:', newRecipe);
+                
+                // Show success message
+                alert('Recipe saved successfully! (In a real app, this would be saved to your database)');
+                
+                // Reset form
+                document.getElementById('recipeForm').reset();
+                // Clear dynamic fields
+                document.getElementById('ingredientsContainer').innerHTML = `
+                    <div class="input-group ingredient-input">
+                        <input type="text" class="form-control ingredient" placeholder="Ingredient" required>
+                        <button type="button" class="btn btn-danger remove-ingredient"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                document.getElementById('instructionsContainer').innerHTML = `
+                    <div class="input-group instruction-input">
+                        <textarea class="form-control instruction" placeholder="Instruction" rows="2" required></textarea>
+                        <button type="button" class="btn btn-danger remove-instruction"><i class="fas fa-times"></i></button>
+                    </div>
+                `;
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addRecipeModal'));
+                modal.hide();
+            });
+        });
+    </script>
+</body>
+</html>
